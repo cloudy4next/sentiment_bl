@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  fetcher:
+    build:
+      context: ./fetcher
+    volumes:
+      - ./processed_comment.py:/app/processed_comment.py
+      - ./comment.py:/app/comment.py
+      - ./.env:/app/.env
+    depends_on:
+      - rabbitmq
+
+  processor:
+    build:
+      context: ./processor
+    volumes:
+      - ./processed_comment.py:/app/processed_comment.py
+      - ./comment.py:/app/comment.py
+      - ./.env:/app/.env
+    depends_on:
+      - rabbitmq
+
+  aggregator:
+    build:
+      context: ./aggregator
+    volumes:
+      - ./processed_comment.py:/app/processed_comment.py
+      - ./comment.py:/app/comment.py
+      - ./.env:/app/.env
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+networks:
+  default:
+    driver: bridge
+ 
+ 
+ 
+ 

@@ -1,0 +1,3 @@
+openai
+pika
+python-dotenv
